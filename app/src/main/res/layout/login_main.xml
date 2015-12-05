@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/emailTextView"
+        android:id="@+id/emailEditText"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="159dp"
@@ -28,9 +28,9 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/passwordTextView"
-        android:layout_alignTop="@+id/emailTextView"
-        android:layout_alignEnd="@+id/emailTextView"
+        android:id="@+id/passwordEditText"
+        android:layout_alignTop="@+id/emailEditText"
+        android:layout_alignEnd="@+id/emailEditText"
         android:layout_marginTop="56dp"
         android:hint="Password" />
 

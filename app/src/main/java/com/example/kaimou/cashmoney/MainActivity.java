@@ -9,6 +9,11 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.squareup.okhttp.OkHttpClient;
+
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
+
 /**
  * Created by kaimou on 12/5/15.
  */
@@ -16,6 +21,8 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
     private TextView loanAmount;
     static Dialog d;
     private int maxAmountToLoan = 50; //Max amount to loan to this person. For test purposes, this is set to 50.
+
+    public static final String BASE_URL = "http://api.myservice.com";
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -26,6 +33,11 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
                 showNumberPicker();
             }
         });
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 
     public void onValueChange(NumberPicker picker, int oldVal, int newVal){
