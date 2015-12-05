@@ -52,11 +52,11 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         Button okButton = (Button)d.findViewById(R.id.button1);
         Button cancelButton = (Button)d.findViewById(R.id.button2);
         final NumberPicker np = (NumberPicker)d.findViewById(R.id.numberPicker1);
-        String[] test = {"1", "2" , "3"};
+        String[] scrollContent = arrayGeneration(maxAmountToLoan);
 
-        np.setMaxValue(maxAmountToLoan/5);
+        np.setMaxValue(scrollContent.length-1);
         np.setMinValue(0);
-        np.setDisplayedValues(arrayGeneration(maxAmountToLoan));
+        np.setDisplayedValues(scrollContent);
         np.setOnValueChangedListener(this);
         okButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -79,7 +79,7 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         int arrayCounter = 0;
         //Amount to loan can only be in increments of 5.
         for(int i = amount; i>0; i= i - 5){
-            valuesLoaned[arrayCounter] = String.valueOf(amount);
+            valuesLoaned[arrayCounter] = String.valueOf(i);
             arrayCounter++;
         }
         return valuesLoaned;
