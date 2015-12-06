@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 public class User {
-
+    private static User currentUser;
     private String _id;
     private String name;
     private String email;
     private String password;
     private int _v;
-    private List<Object> totalLoans = new ArrayList<Object>();
+    private List<String> totalLoans = new ArrayList<String>();
     private String updatedAt;
     private int currentCreditLine;
     private int totalCreditLine;
@@ -114,7 +114,7 @@ public class User {
      * @return
      *     The totalLoans
      */
-    public List<Object> getTotalLoans() {
+    public List<String> getTotalLoans() {
         return totalLoans;
     }
 
@@ -123,7 +123,7 @@ public class User {
      * @param totalLoans
      *     The total_loans
      */
-    public void setTotalLoans(List<Object> totalLoans) {
+    public void setTotalLoans(List<String> totalLoans) {
         this.totalLoans = totalLoans;
     }
 
@@ -183,6 +183,12 @@ public class User {
 
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
+    }
+    public static void setCurrentUser(User u){
+        currentUser = u;
+    }
+    public static User getCurrentUser(){
+        return currentUser;
     }
 
     public void setAdditionalProperty(String name, Object value) {

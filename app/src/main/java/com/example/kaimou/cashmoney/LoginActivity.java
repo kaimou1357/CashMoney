@@ -5,18 +5,25 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.example.kaimou.cashmoney.model.User;
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -29,8 +36,9 @@ public class LoginActivity extends AppCompatActivity {
     @Bind(R.id.emailEditText) EditText userEmail;
     @Bind(R.id.passwordEditText) EditText userPass;
     private SharedPreferences prefs;
+    AsyncHttpClient client = new AsyncHttpClient();
 
-    public static final String BASE_URL = "http://10.9.104.253:3000/api/";
+    public static final String BASE_URL = "http://10.9.104.253:3000/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,34 +56,9 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        OkHttpClient client = new OkHttpClient();
-        client.setReadTimeout(60, TimeUnit.SECONDS);
-        client.setConnectTimeout(60, TimeUnit.SECONDS);
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        client.interceptors().add(interceptor);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        Api api = retrofit.create(Api.class);
 
-        Timber.i("starting retrofit");
-        Call<List<User>> call = api.getUser();
-        call.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Response<List<User>> response, Retrofit retrofit) {
-                Timber.i(response.toString());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
-            }
-        });
     }
 
 
@@ -85,9 +68,39 @@ public class LoginActivity extends AppCompatActivity {
         editPrefs.putBoolean("saveLogin", true);
         editPrefs.putString("email", userEmail.getText().toString());
         editPrefs.putString("pass", userPass.getText().toString());
+        RequestParams params = new RequestParams();
+        params.put("email", userEmail.getText().toString());
+        params.put("password", userPass.getText().toString());
+
+        client.post(BASE_URL, params, new AsyncHttpResponseHandler() {
+            User temp;
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Gson gson = new Gson();
+                String response = new String(responseBody);
+                Log.d("async client", response);
+                temp = gson.fromJson(response, User.class);
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.d("async client", "Login failed");
+
+            }
+
+            public void onFinish() {
+                User.setCurrentUser(temp);
+            }
+        });
         editPrefs.apply();
+
         Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
         startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getApplicationContext().startActivity(startIntent);
+
+
+
     }
 }

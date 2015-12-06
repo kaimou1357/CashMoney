@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,10 +15,16 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.example.kaimou.cashmoney.model.Loan;
+import com.example.kaimou.cashmoney.model.User;
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
@@ -27,18 +34,19 @@ import retrofit.Retrofit;
 public class MainActivity extends Activity implements NumberPicker.OnValueChangeListener {
     private TextView loanAmount;
     private RecyclerView loanRecyclerView;
+    AsyncHttpClient client = new AsyncHttpClient();
     private ArrayList<Loan> loanList;
     private LoanListAdapter mAdapter;
     static Dialog d;
     private int maxAmountToLoan = 50; //Max amount to loan to this person. For test purposes, this is set to 50.
 
-    public static final String BASE_URL = "http://10.9.104.253:3000/api/";
+    public static final String BASE_URL_LOAN_LIST = "http://10.9.104.253:3000/api/loans/";
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         loanRecyclerView = (RecyclerView)findViewById(R.id.paymentListView1);
-        loadRecyclerView();
+        //loadRecyclerView();
 
         loanAmount = (TextView) findViewById(R.id.make_a_loan_textview);
         loanAmount.setText(Integer.toString(maxAmountToLoan));
@@ -68,7 +76,7 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         final NumberPicker np = (NumberPicker)d.findViewById(R.id.numberPicker1);
         final String[] scrollContent = arrayGeneration(maxAmountToLoan);
 
-        np.setMaxValue(scrollContent.length-1);
+        np.setMaxValue(scrollContent.length - 1);
         np.setMinValue(0);
         np.setDisplayedValues(scrollContent);
         np.setOnValueChangedListener(this);
@@ -86,6 +94,7 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         d.show();
 
 
+
     }
 
     private String[] arrayGeneration(int amount){
@@ -100,13 +109,31 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
 
     }
 
+    private void loadLoanList(){
+        client.get(BASE_URL_LOAN_LIST, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        })
+    }
+
     private void loadRecyclerView(){
         mAdapter = new LoanListAdapter(this, loanList);
         loanRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         loanRecyclerView.setAdapter(mAdapter);
 
-
     }
+
+
+
+
+
 
 
 
