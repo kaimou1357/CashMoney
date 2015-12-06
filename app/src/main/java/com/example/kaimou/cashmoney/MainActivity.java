@@ -22,7 +22,7 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
     static Dialog d;
     private int maxAmountToLoan = 50; //Max amount to loan to this person. For test purposes, this is set to 50.
 
-    public static final String BASE_URL = "http://api.myservice.com";
+    public static final String BASE_URL = "https:api.service.com";
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -52,7 +52,7 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         Button okButton = (Button)d.findViewById(R.id.button1);
         Button cancelButton = (Button)d.findViewById(R.id.button2);
         final NumberPicker np = (NumberPicker)d.findViewById(R.id.numberPicker1);
-        String[] scrollContent = arrayGeneration(maxAmountToLoan);
+        final String[] scrollContent = arrayGeneration(maxAmountToLoan);
 
         np.setMaxValue(scrollContent.length-1);
         np.setMinValue(0);
@@ -60,7 +60,7 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         np.setOnValueChangedListener(this);
         okButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                loanAmount.setText(String.valueOf(np.getValue()));
+                loanAmount.setText(String.valueOf(scrollContent[np.getValue()]));
                 d.dismiss();
             }
         });
