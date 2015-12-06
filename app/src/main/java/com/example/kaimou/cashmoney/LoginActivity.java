@@ -3,25 +3,18 @@ package com.example.kaimou.cashmoney;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.example.kaimou.cashmoney.model.User;
-
-import org.w3c.dom.Text;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
-import butterknife.BindDimen;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit.Call;
@@ -45,27 +38,33 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Timber.i("onCreate");
-
-
-
         prefs = getApplicationContext().getSharedPreferences("prefs", MODE_PRIVATE);
+
         if (prefs.getBoolean("saveLogin", false)) {
             userEmail.setText(prefs.getString("email", ""));
             userPass.setText(prefs.getString("pass", ""));
         }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        OkHttpClient client = new OkHttpClient();
+        client.setReadTimeout(60, TimeUnit.SECONDS);
+        client.setConnectTimeout(60, TimeUnit.SECONDS);
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        client.interceptors().add(interceptor);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        Api api = retrofit.create(Api.class);
+
         Timber.i("starting retrofit");
-        Api apiService =
-                retrofit.create(Api.class);
-        Call<List<User>> call = apiService.getUser();
+        Call<List<User>> call = api.getUser();
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Response<List<User>> response, Retrofit retrofit) {
@@ -74,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
-                Timber.i("failure");
+                t.printStackTrace();
             }
         });
     }

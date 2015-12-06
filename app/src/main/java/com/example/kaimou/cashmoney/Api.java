@@ -6,11 +6,9 @@ import com.example.kaimou.cashmoney.model.User;
 import java.util.List;
 
 import retrofit.Call;
-import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.Path;
 
 /**
  * Created by redacted on 12/5/15 at 5:27 PM.
