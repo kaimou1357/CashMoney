@@ -4,12 +4,19 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.example.kaimou.cashmoney.model.Loan;
 import com.squareup.okhttp.OkHttpClient;
+
+import java.util.ArrayList;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
@@ -19,17 +26,22 @@ import retrofit.Retrofit;
  */
 public class MainActivity extends Activity implements NumberPicker.OnValueChangeListener {
     private TextView loanAmount;
+    private RecyclerView loanRecyclerView;
+    private ArrayList<Loan> loanList;
+    private LoanListAdapter mAdapter;
     static Dialog d;
     private int maxAmountToLoan = 50; //Max amount to loan to this person. For test purposes, this is set to 50.
-
-    public static final String BASE_URL = "https:api.service.com";
 
     public static final String BASE_URL = "http://10.9.104.253:3000/api/";
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        loanRecyclerView = (RecyclerView)findViewById(R.id.paymentListView1);
+        loadRecyclerView();
+
         loanAmount = (TextView) findViewById(R.id.make_a_loan_textview);
+        loanAmount.setText(Integer.toString(maxAmountToLoan));
         loanAmount.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 showNumberPicker();
@@ -85,6 +97,14 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
             arrayCounter++;
         }
         return valuesLoaned;
+
+    }
+
+    private void loadRecyclerView(){
+        mAdapter = new LoanListAdapter(this, loanList);
+        loanRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        loanRecyclerView.setAdapter(mAdapter);
+
 
     }
 
