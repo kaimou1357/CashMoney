@@ -21,7 +21,12 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -57,7 +62,7 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         });
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BASE_URL_LOAN_LIST)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
@@ -120,7 +125,7 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
             }
-        })
+        });
     }
 
     private void loadRecyclerView(){
@@ -129,13 +134,4 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         loanRecyclerView.setAdapter(mAdapter);
 
     }
-
-
-
-
-
-
-
-
-
 }

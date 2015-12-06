@@ -10,7 +10,13 @@ import android.widget.TextView;
 
 import com.example.kaimou.cashmoney.model.Loan;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import timber.log.Timber;
 
 /**
  * Created by kaimou on 12/5/15.
@@ -36,7 +42,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     public void onBindViewHolder (final LoanViewHolder viewHolder, int position) {
 
         Loan currLoan = loanObjects.get(position);
-        //viewHolder.setLoanDate(currLoan.getDate());
+        viewHolder.setLoanDate(currLoan.getCreatedAt());
         viewHolder.setLoanValue(currLoan.getAmount());
 
     }
@@ -62,8 +68,16 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
             checkedOrNot = (CheckBox)view.findViewById(R.id.checkBox);
         }
 
-        public void setLoanDate (String messageTest) {
-            loanDate.setText(messageTest);
+        public void setLoanDate (String date) {
+            loanDate.setText(date);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+            Date temp = null;
+            try {
+                temp = sdf.parse(date);
+            } catch (ParseException e) {
+                Timber.i("Fuck");
+            }
+            Timber.i(temp.getMonth() + "");
         }
 
         public void setLoanValue(int rowHeader) {
