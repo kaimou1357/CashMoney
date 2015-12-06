@@ -47,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
 
         Timber.i("onCreate");
 
+
+
         prefs = getApplicationContext().getSharedPreferences("prefs", MODE_PRIVATE);
         if (prefs.getBoolean("saveLogin", false)) {
             userEmail.setText(prefs.getString("email", ""));
