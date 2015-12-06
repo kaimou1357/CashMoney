@@ -3,7 +3,10 @@ package com.example.kaimou.cashmoney;
 import com.example.kaimou.cashmoney.model.Loan;
 import com.example.kaimou.cashmoney.model.User;
 
+import java.util.List;
+
 import retrofit.Call;
+import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -14,8 +17,8 @@ import retrofit.http.Path;
  */
 public interface Api {
 
-    @GET("/users/{username}")
-    Call<Loan> getUser(@Path("username") String username);
+    @GET("/users/")
+    Call<List<User>> getUser();
 
     @POST("")
     void login(@Body User user);

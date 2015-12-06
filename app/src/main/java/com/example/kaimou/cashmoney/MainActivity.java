@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.okhttp.OkHttpClient;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
@@ -18,16 +20,18 @@ import retrofit.Retrofit;
  * Created by kaimou on 12/5/15.
  */
 public class MainActivity extends Activity implements NumberPicker.OnValueChangeListener {
-    private TextView loanAmount;
+    @Bind(R.id.make_a_loan_textview) TextView loanAmount;
+    private NumberPicker np;
     static Dialog d;
     private int maxAmountToLoan = 50; //Max amount to loan to this person. For test purposes, this is set to 50.
 
-    public static final String BASE_URL = "http://api.myservice.com";
+
+    public static final String BASE_URL = "http://10.9.104.253:3000/api/";
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        loanAmount = (TextView) findViewById(R.id.make_a_loan_textview);
+        ButterKnife.bind(this);
         loanAmount.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 showNumberPicker();
@@ -52,11 +56,9 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         Button okButton = (Button)d.findViewById(R.id.button1);
         Button cancelButton = (Button)d.findViewById(R.id.button2);
         final NumberPicker np = (NumberPicker)d.findViewById(R.id.numberPicker1);
-        String[] scrollContent = arrayGeneration(maxAmountToLoan);
-
-        np.setMaxValue(scrollContent.length-1);
+        np.setMaxValue(maxAmountToLoan/5 - 1);
         np.setMinValue(0);
-        np.setDisplayedValues(scrollContent);
+        np.setDisplayedValues(arrayGeneration(maxAmountToLoan));
         np.setOnValueChangedListener(this);
         okButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -70,8 +72,6 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
             }
         });
         d.show();
-
-
     }
 
     private String[] arrayGeneration(int amount){
@@ -85,8 +85,4 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
         return valuesLoaned;
 
     }
-
-
-
-
 }
