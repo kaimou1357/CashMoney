@@ -42,7 +42,7 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
     public void onBindViewHolder (final LoanViewHolder viewHolder, int position) {
 
         Loan currLoan = loanObjects.get(position);
-        viewHolder.setLoanDate(currLoan.getCreatedAt());
+        viewHolder.setLoanDate(currLoan.getCreated_at());
         viewHolder.setLoanValue(currLoan.getAmount());
 
     }
@@ -69,19 +69,25 @@ public class LoanListAdapter extends RecyclerView.Adapter<LoanListAdapter.LoanVi
         }
 
         public void setLoanDate (String date) {
-            loanDate.setText(date);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
-            Date temp = null;
-            try {
-                temp = sdf.parse(date);
-            } catch (ParseException e) {
-                Timber.i("Fuck");
+            //
+            // loanDate.setText(date);
+            Timber.i(date);
+            Date temp= null;
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try{
+                temp = format.parse(date.replace("T", " "));
+            }catch(ParseException e){
+                e.printStackTrace();
             }
-            Timber.i(temp.getMonth() + "");
+
+
+
+            loanDate.setText(temp.getMonth() + "");
         }
 
         public void setLoanValue(int rowHeader) {
-            loanValue.setText(rowHeader);
+            String value = String.valueOf(rowHeader);
+            loanValue.setText(value);
         }
 
 

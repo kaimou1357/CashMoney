@@ -13,7 +13,7 @@ public class Loan {
     private int V;
     private boolean paid;
     private String deadline;
-    private String createdAt;
+    private String created_at;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
@@ -127,19 +127,19 @@ public class Loan {
     /**
      *
      * @return
-     * The createdAt
+     * The created_at
      */
-    public String getCreatedAt() {
-        return createdAt;
+    public String getCreated_at() {
+        return created_at;
     }
 
     /**
      *
-     * @param createdAt
+     * @param created_at
      * The created_at
      */
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
     public Map<String, Object> getAdditionalProperties() {

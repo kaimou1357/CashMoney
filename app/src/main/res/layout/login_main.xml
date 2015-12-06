@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight = "16dp"
-
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".LoginActivity"
+    tools:context="com.example.kaimou.cashmoney.MainActivity"
     tools:showIn="@layout/activity_main">
+
 
 
     <EditText
@@ -21,6 +23,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="159dp"
+        android:elevation = "5dp"
         android:hint="Email Address" />
 
     <EditText
@@ -32,6 +35,7 @@
         android:layout_alignTop="@+id/emailEditText"
         android:layout_alignEnd="@+id/emailEditText"
         android:layout_marginTop="56dp"
+        android:elevation = "5dp"
         android:hint="Password" />
 
     <Button
@@ -40,6 +44,28 @@
         android:text="Login"
         android:id="@+id/loginButton"
         android:layout_below="@+id/passwordEditText"
+        style = "@style/Button"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Credit 22"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:typeface="normal"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize = "25dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="A New Form of Credit"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

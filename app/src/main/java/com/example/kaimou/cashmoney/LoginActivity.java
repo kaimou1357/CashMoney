@@ -71,6 +71,10 @@ public class LoginActivity extends AppCompatActivity {
         RequestParams params = new RequestParams();
         params.put("email", userEmail.getText().toString());
         params.put("password", userPass.getText().toString());
+        //For testing purposes. Remove later.
+        Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplicationContext().startActivity(startIntent);
 
         client.post(BASE_URL, params, new AsyncHttpResponseHandler() {
             User temp;
@@ -92,13 +96,14 @@ public class LoginActivity extends AppCompatActivity {
 
             public void onFinish() {
                 User.setCurrentUser(temp);
+                Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(startIntent);
             }
         });
         editPrefs.apply();
 
-        Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getApplicationContext().startActivity(startIntent);
+
 
 
 

@@ -24,6 +24,7 @@ import com.squareup.okhttp.OkHttpClient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -42,17 +43,16 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
     AsyncHttpClient client = new AsyncHttpClient();
     private ArrayList<Loan> loanList;
     private LoanListAdapter mAdapter;
-    static Dialog d;
-    private int maxAmountToLoan = 50; //Max amount to loan to this person. For test purposes, this is set to 50.
+    private int maxAmountToLoan; //Max amount to loan to this person. For test purposes, this is set to 50.
 
-    public static final String BASE_URL_LOAN_LIST = "http://10.9.104.253:3000/api/loans/";
+    public static final String BASE_URL_LOAN_LIST = "http://10.9.104.253:3000/api/users/";
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         loanRecyclerView = (RecyclerView)findViewById(R.id.paymentListView1);
-        //loadRecyclerView();
-
+        maxAmountToLoan = User.getCurrentUser().getTotalCreditLine();
+        loadLoanList();
         loanAmount = (TextView) findViewById(R.id.make_a_loan_textview);
         loanAmount.setText(Integer.toString(maxAmountToLoan));
         loanAmount.setOnClickListener(new View.OnClickListener(){
@@ -61,10 +61,6 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
             }
         });
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL_LOAN_LIST)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
     }
 
     public void onValueChange(NumberPicker picker, int oldVal, int newVal){
@@ -115,23 +111,46 @@ public class MainActivity extends Activity implements NumberPicker.OnValueChange
     }
 
     private void loadLoanList(){
-        client.get(BASE_URL_LOAN_LIST, new AsyncHttpResponseHandler() {
+        String tempURL = BASE_URL_LOAN_LIST + User.getCurrentUser().get_id()+"/get-loans";
+        client.get(tempURL, new AsyncHttpResponseHandler() {
+            Loan[] loans;
+            ArrayList<Loan> arrayList;
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                
+                String response = new String(responseBody);
+                Log.d("loans", response);
+                Gson gson = new Gson();
+                loans = gson.fromJson(response, Loan[].class);
+                arrayList = new ArrayList<Loan>(Arrays.asList(loans));
+
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
             }
+            @Override
+            public void onFinish(){
+                loadRecyclerView(arrayList);
+            }
+
         });
     }
 
-    private void loadRecyclerView(){
+    private void loadRecyclerView(ArrayList<Loan> list){
+        this.loanList = list;
         mAdapter = new LoanListAdapter(this, loanList);
-        loanRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        loanRecyclerView.setLayoutManager(new org.solovyev.android.views.llm.LinearLayoutManager(this));
         loanRecyclerView.setAdapter(mAdapter);
 
     }
+
+
+
+
+
+
+
+
+
 }
